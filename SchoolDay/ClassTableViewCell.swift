@@ -15,4 +15,8 @@ class ClassTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var classLabel: UILabel!
 
+    func display(time: String, detail: String) {
+        timeLabel.text = time
+        classLabel.text = detail
+    }
 }

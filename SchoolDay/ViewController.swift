@@ -12,15 +12,11 @@ class ViewController: UIViewController,
     UITableViewDataSource, UITableViewDelegate
 {
 
-
-
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
 
     let ymdFormatter = DateFormatter()
-    let monthFormatter = DateFormatter()
     let weekdayFormatter = DateFormatter()
-    let dateFormatter = DateFormatter()
 
     let classes: [String:String] = [
         "1": "Exploring Computer Science",
@@ -33,32 +29,20 @@ class ViewController: UIViewController,
 
 
     fileprivate var days = [String]()
+    fileprivate var today: [(String, String)]?
+
     //    fileprivate var items = [String:[String]]()
     fileprivate var cal : Cal?
 
     fileprivate var currentPage: Int = 0 {
         didSet {
             let date = self.days[self.currentPage]
-            NSLog("=============\nSET CURRENT PAGE: %d\n=============", self.currentPage)
-            if let cal = self.cal {
-                if let day = cal.sum2(day: date) {
-                    //scheduleTextView.text = day.description(classes: self.classes)
-                    //scheduleTextView.textAlignment = .left
 
-                    return
-                }
+            if let cal = self.cal, let day = cal.sum2(day: date) {
+                    self.today = day.description(classes: self.classes)
+            } else {
+                self.today = [(String,String)]()
             }
-
-            var text = "Holiday"
-            if let now = ymdFormatter.date(from: date) {
-                let weekday = weekdayFormatter.string(from: now).lowercased()
-                if weekday == "saturday" || weekday == "sunday" {
-                    text = "Weekend"
-                }
-            }
-
-            //scheduleTextView.text = text
-            //scheduleTextView.textAlignment = .center
         }
     }
 
@@ -86,9 +70,7 @@ class ViewController: UIViewController,
         layout.spacingMode = UPCarouselFlowLayoutSpacingMode.overlap(visibleOffset: 30)
 
         ymdFormatter.dateFormat = "yyyyMMdd"
-        monthFormatter.dateFormat = "MMMM"
         weekdayFormatter.dateFormat = "EEEE"
-        dateFormatter.dateFormat = "d"
 
         // create items
         if let cal = Cal(fromResource: "rotation", ofType: "ics") {
@@ -123,13 +105,12 @@ class ViewController: UIViewController,
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCell.identifier, for: indexPath) as! DateCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCollectionViewCell.identifier, for: indexPath) as! DateCollectionViewCell
         let date = days[(indexPath as IndexPath).row]
 
         if let now = ymdFormatter.date(from: date) {
-            cell.monthLabel.text = monthFormatter.string(from: now).uppercased()
-            cell.weekdayLabel.text = weekdayFormatter.string(from: now)
-            cell.dateLabel.text = dateFormatter.string(from: now)
+            cell.display(date: now)
+            tableView.reloadData()
         }
 
         return cell
@@ -167,11 +148,28 @@ class ViewController: UIViewController,
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 3
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return nil
+        var cell: UITableViewCell!
+
+        switch(indexPath.row) {
+        case 0:
+            cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
+            cell.textLabel?.text = "Title Here"
+        default:
+            cell = tableView.dequeueReusableCell(withIdentifier: ClassTableViewCell.identifier, for: indexPath)
+
+            let date = self.days[self.currentPage]
+            if let cal = self.cal {
+                if let day = cal.sum2(day: date) {
+                    NSLog("Detail: %@", day.description(classes: self.classes))
+
+            (cell as! ClassTableViewCell).display(time: "1:35pm", detail: "Class Name")
+        }
+
+        return cell
     }
 
 }

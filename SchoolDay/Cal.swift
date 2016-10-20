@@ -141,7 +141,7 @@ struct Day {
         self.rotation = periods
     }
 
-    internal func detail(period: Int, classes: [String:String]) -> String? {
+    internal func detail(period: Int, classes: [String:String]) -> (String,String)? {
         guard period < schedule.count else {
             return nil
         }
@@ -177,25 +177,24 @@ struct Day {
             clz = "Testing"
         }
 
-        return String(format: "%@: %@", sch, clz)
+        return (sch, clz)//String(format: "%@: %@", sch, clz)
 
     }
 
-    func description(classes: [String:String]) -> String {
-        var details = [String]()
+    func description(classes: [String:String]) -> [(String,String)] {
+        var details = [(String,String)]()
         for i in 0 ..< schedule.count {
             if let d = detail(period: i, classes: classes) {
                 details.append(d)
             }
         }
 
-        return String(format: "%@\n%@", title, details.joined(separator: "\n"))
+        //return String(format: "%@\n%@", title, details.joined(separator: "\n"))
     }
 }
 
+
 struct Cal {
-
-
     let cal: [String:[String]]
 
     init?(fromResource: String, ofType: String) {
