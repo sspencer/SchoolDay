@@ -25,24 +25,21 @@ class ViewController: UIViewController,
         "4": "Biology",
         "5": "Algebra 1",
         "6": "Grammar Comp",
-        "7": "Spanish 1"]
+        "7": "Spanish 1",
+        "L": "Lunch",
+        "M": "Mass",
+        "C": "Career Day",
+        "X": "X-Block",
+        "T": "Testing Day"]
 
 
-    fileprivate var days = [String]()
-    fileprivate var today: [(String, String)]?
-
-    //    fileprivate var items = [String:[String]]()
-    fileprivate var cal : Cal?
+    fileprivate var calendar : Cal!
+    fileprivate var schedule : Schedule?
 
     fileprivate var currentPage: Int = 0 {
         didSet {
-            let date = self.days[self.currentPage]
-
-            if let cal = self.cal, let day = cal.sum2(day: date) {
-                    self.today = day.description(classes: self.classes)
-            } else {
-                self.today = [(String,String)]()
-            }
+            self.schedule = calendar.schedule(index: self.currentPage)
+            self.tableView.reloadData()
         }
     }
 
@@ -73,19 +70,15 @@ class ViewController: UIViewController,
         weekdayFormatter.dateFormat = "EEEE"
 
         // create items
-        if let cal = Cal(fromResource: "rotation", ofType: "ics") {
-            self.cal = cal
-            self.days = cal.days()
-        }
+        self.calendar = Cal(jsonResource: "rotation")
 
         // Show calendar for today's date
         let today = ymdFormatter.string(from: Date())
-        if let page = self.days.index(of:today) {
+        if let page = self.calendar.index(date:today) {
             self.currentPage = page
         } else {
             self.currentPage = 0
         }
-
     }
 
 
@@ -101,16 +94,15 @@ class ViewController: UIViewController,
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return days.count
+        return calendar.count()
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCollectionViewCell.identifier, for: indexPath) as! DateCollectionViewCell
-        let date = days[(indexPath as IndexPath).row]
-
-        if let now = ymdFormatter.date(from: date) {
-            cell.display(date: now)
-            tableView.reloadData()
+        if let schedule = calendar.schedule(index: indexPath.row) {
+            if let now = ymdFormatter.date(from: schedule.date) {
+                cell.display(date: now)
+            }
         }
 
         return cell
@@ -139,7 +131,22 @@ class ViewController: UIViewController,
         let layout = self.collectionView.collectionViewLayout as! UPCarouselFlowLayout
         let pageSide = (layout.scrollDirection == .horizontal) ? self.pageSize.width : self.pageSize.height
         let offset = (layout.scrollDirection == .horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
-        currentPage = Int(floor((offset - pageSide / 2) / pageSide) + 1)
+
+        let nextPage = Int(floor((offset - pageSide / 2) / pageSide) + 1)
+
+        // Collection View errantly scrolls to first item when scrolling in table view.
+        // Verify that the nextPage can be scrolled to.
+        var match = false
+        for cell in self.collectionView.visibleCells {
+            let p = self.collectionView.indexPath(for: cell)
+            if p?.last == nextPage {
+                match = true
+            }
+        }
+
+        if match {
+            currentPage = nextPage
+        }
     }
     
     // MARK: - Table View Delegate & DataSource
@@ -148,25 +155,61 @@ class ViewController: UIViewController,
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        guard let schedule = self.schedule else {
+            return 0
+        }
+
+        if schedule.times.count > 0 {
+            return schedule.times.count + 2
+        } else {
+            return 1
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell!
+        let row = indexPath.row
 
-        switch(indexPath.row) {
+        switch(row) {
         case 0:
             cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
-            cell.textLabel?.text = "Title Here"
+            if let schedule = self.schedule {
+                cell.textLabel?.textColor = UIColor.black
+
+                if schedule.times.count == 0 {
+                    cell.textLabel?.text = "Weekend or Holiday"
+                } else {
+                    cell.textLabel?.text = schedule.title
+                }
+            }
         default:
-            cell = tableView.dequeueReusableCell(withIdentifier: ClassTableViewCell.identifier, for: indexPath)
+            if let schedule = self.schedule {
 
-            let date = self.days[self.currentPage]
-            if let cal = self.cal {
-                if let day = cal.sum2(day: date) {
-                    NSLog("Detail: %@", day.description(classes: self.classes))
+                if row > schedule.times.count {
+                    cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
+                    let title : String
+                    if schedule.dismissal == "1:40pm" {
+                        title = "Early Dismissal: 1:40pm"
+                    } else {
+                        title = "Dismissal: \(schedule.dismissal)"
+                    }
 
-            (cell as! ClassTableViewCell).display(time: "1:35pm", detail: "Class Name")
+                    cell.textLabel?.textColor = UIColor.red
+                    cell.textLabel?.text = title
+
+                } else {
+                    cell = tableView.dequeueReusableCell(withIdentifier: ClassTableViewCell.identifier, for: indexPath)
+                    let index = row - 1
+                    let period: String
+                    if let clz = classes[schedule.periods[index]] {
+                        period = clz
+                    } else {
+                        period = schedule.periods[index]
+                    }
+
+                    (cell as! ClassTableViewCell).display(time: schedule.times[index], detail: period)
+                }
+            }
         }
 
         return cell

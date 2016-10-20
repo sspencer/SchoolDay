@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA5A0D9A1DB877CC00D42A87 /* rotation.json in Resources */ = {isa = PBXBuildFile; fileRef = AA5A0D991DB877CC00D42A87 /* rotation.json */; };
 		AA9764761DB5CE8300EDE779 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9764751DB5CE8300EDE779 /* AppDelegate.swift */; };
 		AA9764781DB5CE8300EDE779 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9764771DB5CE8300EDE779 /* ViewController.swift */; };
 		AA97647B1DB5CE8300EDE779 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA9764791DB5CE8300EDE779 /* Main.storyboard */; };
 		AA97647D1DB5CE8300EDE779 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA97647C1DB5CE8300EDE779 /* Assets.xcassets */; };
 		AA9764801DB5CE8400EDE779 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA97647E1DB5CE8400EDE779 /* LaunchScreen.storyboard */; };
 		AA9764881DB5CEA100EDE779 /* Cal.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9764871DB5CEA100EDE779 /* Cal.swift */; };
-		AA97648A1DB5CEA900EDE779 /* DayWalker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9764891DB5CEA900EDE779 /* DayWalker.swift */; };
-		AA97648E1DB5CEB800EDE779 /* rotation.ics in Resources */ = {isa = PBXBuildFile; fileRef = AA97648D1DB5CEB800EDE779 /* rotation.ics */; };
 		AA9764901DB5CEC400EDE779 /* UPCarouselFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA97648F1DB5CEC400EDE779 /* UPCarouselFlowLayout.swift */; };
 		AA9964571DB5DE2600816855 /* ClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9964561DB5DE2600816855 /* ClassTableViewCell.swift */; };
 		AA9964591DB5E15200816855 /* DateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9964581DB5E15200816855 /* DateCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA5A0D991DB877CC00D42A87 /* rotation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rotation.json; sourceTree = "<group>"; };
 		AA9764721DB5CE8300EDE779 /* SchoolDay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SchoolDay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA9764751DB5CE8300EDE779 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA9764771DB5CE8300EDE779 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -29,8 +29,6 @@
 		AA97647F1DB5CE8400EDE779 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA9764811DB5CE8400EDE779 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA9764871DB5CEA100EDE779 /* Cal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cal.swift; sourceTree = "<group>"; };
-		AA9764891DB5CEA900EDE779 /* DayWalker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayWalker.swift; sourceTree = "<group>"; };
-		AA97648D1DB5CEB800EDE779 /* rotation.ics */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rotation.ics; sourceTree = "<group>"; };
 		AA97648F1DB5CEC400EDE779 /* UPCarouselFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UPCarouselFlowLayout.swift; sourceTree = "<group>"; };
 		AA9964561DB5DE2600816855 /* ClassTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassTableViewCell.swift; sourceTree = "<group>"; };
 		AA9964581DB5E15200816855 /* DateCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -77,8 +75,8 @@
 		AA9764911DB5CF4C00EDE779 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AA97648D1DB5CEB800EDE779 /* rotation.ics */,
 				AA9764811DB5CE8400EDE779 /* Info.plist */,
+				AA5A0D991DB877CC00D42A87 /* rotation.json */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -109,7 +107,6 @@
 			isa = PBXGroup;
 			children = (
 				AA9764871DB5CEA100EDE779 /* Cal.swift */,
-				AA9764891DB5CEA900EDE779 /* DayWalker.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -175,7 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA9764801DB5CE8400EDE779 /* LaunchScreen.storyboard in Resources */,
-				AA97648E1DB5CEB800EDE779 /* rotation.ics in Resources */,
+				AA5A0D9A1DB877CC00D42A87 /* rotation.json in Resources */,
 				AA97647D1DB5CE8300EDE779 /* Assets.xcassets in Resources */,
 				AA97647B1DB5CE8300EDE779 /* Main.storyboard in Resources */,
 			);
@@ -192,7 +189,6 @@
 				AA9764901DB5CEC400EDE779 /* UPCarouselFlowLayout.swift in Sources */,
 				AA9764761DB5CE8300EDE779 /* AppDelegate.swift in Sources */,
 				AA9964571DB5DE2600816855 /* ClassTableViewCell.swift in Sources */,
-				AA97648A1DB5CEA900EDE779 /* DayWalker.swift in Sources */,
 				AA9764881DB5CEA100EDE779 /* Cal.swift in Sources */,
 				AA9964591DB5E15200816855 /* DateCollectionViewCell.swift in Sources */,
 			);
