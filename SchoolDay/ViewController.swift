@@ -34,11 +34,11 @@ class ViewController: UIViewController,
 
 
     fileprivate var calendar : Cal!
-    fileprivate var schedule : Schedule?
+    fileprivate var day : Day?
 
     fileprivate var currentPage: Int = 0 {
         didSet {
-            self.schedule = calendar.schedule(index: self.currentPage)
+            self.day = calendar.day(index: self.currentPage)
             self.tableView.reloadData()
         }
     }
@@ -99,7 +99,7 @@ class ViewController: UIViewController,
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCollectionViewCell.identifier, for: indexPath) as! DateCollectionViewCell
-        if let schedule = calendar.schedule(index: indexPath.row) {
+        if let schedule = calendar.day(index: indexPath.row) {
             if let now = ymdFormatter.date(from: schedule.date) {
                 cell.display(date: now)
             }
@@ -155,7 +155,7 @@ class ViewController: UIViewController,
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let schedule = self.schedule else {
+        guard let schedule = self.day else {
             return 0
         }
 
@@ -170,45 +170,48 @@ class ViewController: UIViewController,
         var cell: UITableViewCell!
         let row = indexPath.row
 
+        guard let schedule = self.day else {
+            return cell
+        }
+
         switch(row) {
         case 0:
-            cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
-            if let schedule = self.schedule {
-                cell.textLabel?.textColor = UIColor.black
-
-                if schedule.times.count == 0 {
-                    cell.textLabel?.text = "Weekend or Holiday"
+            if schedule.times.count == 0 {
+                cell = tableView.dequeueReusableCell(withIdentifier: "specialCell", for: indexPath)
+                if schedule.weekend {
+                    cell.textLabel?.text = "Weekend"
                 } else {
-                    cell.textLabel?.text = schedule.title
+                    cell.textLabel?.text = "*** Holiday ***"
                 }
+            } else {
+                cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
+                cell.textLabel?.textColor = UIColor.black
+                cell.textLabel?.text = schedule.title
             }
         default:
-            if let schedule = self.schedule {
-
-                if row > schedule.times.count {
-                    cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
-                    let title : String
-                    if schedule.dismissal == "1:40pm" {
-                        title = "Early Dismissal: 1:40pm"
-                    } else {
-                        title = "Dismissal: \(schedule.dismissal)"
-                    }
-
-                    cell.textLabel?.textColor = UIColor.red
-                    cell.textLabel?.text = title
-
+            if row > schedule.times.count {
+                cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
+                let title : String
+                if schedule.dismissal == "1:40pm" {
+                    title = "Early Dismissal: 1:40pm"
                 } else {
-                    cell = tableView.dequeueReusableCell(withIdentifier: ClassTableViewCell.identifier, for: indexPath)
-                    let index = row - 1
-                    let period: String
-                    if let clz = classes[schedule.periods[index]] {
-                        period = clz
-                    } else {
-                        period = schedule.periods[index]
-                    }
-
-                    (cell as! ClassTableViewCell).display(time: schedule.times[index], detail: period)
+                    title = "Dismissal: \(schedule.dismissal)"
                 }
+
+                cell.textLabel?.textColor = UIColor.red
+                cell.textLabel?.text = title
+
+            } else {
+                cell = tableView.dequeueReusableCell(withIdentifier: ClassTableViewCell.identifier, for: indexPath)
+                let index = row - 1
+                let period: String
+                if let clz = classes[schedule.periods[index]] {
+                    period = clz
+                } else {
+                    period = schedule.periods[index]
+                }
+
+                (cell as! ClassTableViewCell).display(time: schedule.times[index], detail: period)
             }
         }
 

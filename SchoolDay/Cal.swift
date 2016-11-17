@@ -8,17 +8,48 @@
 
 import Foundation
 
-struct Schedule {
+typealias JSONDictionary = [String:Any]
+
+struct Day {
     let date: String
     let title: String
     let periods: [String]
     let times: [String]
     let dismissal: String
+    let weekend: Bool
 }
+
+extension Day {
+    init?(json:JSONDictionary) {
+        guard
+            let date = json["date"] as? String,
+            let title = json["title"] as? String,
+            let periods = json["periods"] as? [String],
+            let times = json["times"] as? [ String ],
+            let dismissal = json["dismissal"] as? String
+            else { return nil }
+
+        self.date = date
+        self.title = title
+        self.periods = periods
+        self.times = times
+        self.dismissal = dismissal
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let calendar = Calendar(identifier: .gregorian)
+        if let dt = dateFormatter.date(from: date) {
+            self.weekend = calendar.isDateInWeekend(dt)
+        } else {
+            self.weekend = false
+        }
+    }
+}
+
 
 struct Cal {
 
-    let cal: [Schedule]
+    let days: [Day]
 
     init(jsonResource: String) {
 
@@ -27,66 +58,39 @@ struct Cal {
             let data = try Data.init(contentsOf: calendarURL!)
             let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
 
-            var schedules = [Schedule]()
+            var schedule = [Day]()
 
-            if let scheduleItems = json as? [[String: Any ]] {
-
+            if let scheduleItems = json as? [JSONDictionary] {
                 for item in scheduleItems {
-
-                    var date = ""
-                    var title = ""
-                    var dismissal = ""
-                    var periods = [String]()
-                    var times = [String]()
-
-                    if let s = item["date"] as? String {
-                        date = s
+                    if let day = Day(json:item) {
+                        schedule.append(day)
                     }
-
-                    if let s = item["title"] as? String {
-                        title = s
-                    }
-
-                    if let s = item["periods"] as? [ String ] {
-                        periods = s
-                    }
-
-                    if let s = item["times"] as? [ String ] {
-                        times = s
-                    }
-
-                    if let s = item["dismissal"] as? String {
-                        dismissal = s
-                    }
-
-                    let schedule = Schedule(date: date, title: title, periods: periods, times: times, dismissal: dismissal)
-                    schedules.append(schedule)
                 }
             }
 
-            self.cal = schedules
+            self.days = schedule
 
         } catch {
             print("error serializing JSON: \(error)")
-            self.cal = [Schedule]()
+            self.days = [Day]()
         }
     }
 
     func count() -> Int {
-        return cal.count
+        return days.count
     }
 
-    func schedule(index: Int) -> Schedule? {
-        guard index >= 0 && index < cal.count else {
+    func day(index: Int) -> Day? {
+        guard index >= 0 && index < days.count else {
             return nil
         }
 
-        return cal[index]
+        return days[index]
     }
 
     func index(date: String) -> Int? {
         var i = 0
-        for s in cal {
+        for s in days {
             if date == s.date {
                 return i
             }
