@@ -20,7 +20,7 @@ class ViewController: UIViewController,
 
     let classes: [String:String] = [
         "1": "Exploring Computer Science",
-        "2": "The Revelation of JC",
+        "2": "The Revelation of Jesus Christ",
         "3": "Music Theory",
         "4": "Biology",
         "5": "Algebra 1",

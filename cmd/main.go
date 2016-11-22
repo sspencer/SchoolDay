@@ -136,7 +136,7 @@ func customSchedule(summary string) (Schedule, bool) {
 		sch.Title = "Mass/Assembly"
 		sch.Times = []string{"8:00am", "9:35am", "11:05am", "11:40am", "1:15pm"}
 		if periods[n-1] == "X" {
-			sch.Dismissal = "1:40pm"
+			sch.Dismissal = "1:45pm"
 		} else {
 			sch.Dismissal = "2:40pm"
 		}
