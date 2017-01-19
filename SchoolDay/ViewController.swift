@@ -19,13 +19,13 @@ class ViewController: UIViewController,
     let weekdayFormatter = DateFormatter()
 
     let classes: [String:String] = [
-        "1": "Exploring Computer Science",
-        "2": "The Revelation of Jesus Christ",
+        "1": "Health",
+        "2": "Spanish",
         "3": "Music Theory",
         "4": "Biology",
-        "5": "Algebra 1",
-        "6": "Grammar Comp",
-        "7": "Spanish 1",
+        "5": "Algebra",
+        "6": "Grammar",
+        "7": "Jesus",
         "L": "Lunch",
         "M": "Mass",
         "C": "Career Day",
