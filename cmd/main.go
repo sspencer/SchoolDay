@@ -60,6 +60,8 @@ func main() {
 			schedule, ok = rotations["TEST"]
 		} else if isFull(summary) {
 			schedule, ok = rotations["FULL"]
+		} else if isSchoolClosed(summary) {
+			continue
 		} else {
 			schedule, ok = customSchedule(summary)
 		}
@@ -79,6 +81,11 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(string(data))
+}
+
+func isSchoolClosed(summary string) bool {
+	str := strings.ToUpper(summary)
+	return strings.HasPrefix(str, "SCHOOL CLOSED")
 }
 
 func isTesting(summary string) bool {
